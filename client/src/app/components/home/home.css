@@ -1,0 +1,5 @@
+.hero-img {
+  max-width: 350px;
+  border: 3px solid var(--secondary-color);
+  padding: 8px;
+}

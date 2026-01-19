@@ -1,0 +1,50 @@
+@import 'tailwindcss';
+
+:root {
+  --primary: #4F46E5;
+    /* Indigo */
+    --primary-light: #6366F1;
+    /* Light Indigo */
+    --primary-dark: #4338CA;
+    /* Dark Indigo */
+    --secondary: #7C3AED;
+    /* Purple */
+    --accent: #A78BFA;
+    /* Light Purple */
+    --background: #FFFFFF;
+    /* White */
+    --surface: #EEF2FF;
+    /* Indigo Cream */
+    --text-primary: #312E81;
+    /* Dark Indigo */
+    --text-secondary: #6B7280;
+    /* Gray */
+    --border: #C7D2FE;
+    /* Light Indigo */
+  /* Light Purple */
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border: var(--border);
+
+}
+
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+
+a {
+  text-decoration: none !important;
+}

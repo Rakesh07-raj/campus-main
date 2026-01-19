@@ -1,0 +1,845 @@
+<app-navbar></app-navbar>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Hero Section -->
+    <div class="mb-12 animate-fade-in">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-8">
+        <!-- Hero Text -->
+        <div class="flex-1">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Find What You've 
+            <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Lost
+            </span>
+          </h1>
+          <p class="text-lg text-gray-600 max-w-2xl">
+            Search through thousands of found items or report your lost belongings. 
+            Our smart matching system helps you reunite faster.
+          </p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-3 gap-4 bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+          <div class="text-center cursor-pointer transform transition-all hover:scale-105 active:scale-95" 
+               (click)="showItemsByCategory('electronics')"
+               tabindex="0"
+               role="button">
+            <div class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">2,847</div>
+            <div class="text-sm text-gray-600 font-medium mt-1">Items Found</div>
+          </div>
+          <div class="text-center cursor-pointer transform transition-all hover:scale-105 active:scale-95" 
+               (click)="showSuccessStories()"
+               tabindex="0"
+               role="button">
+            <div class="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-400 bg-clip-text text-transparent">94%</div>
+            <div class="text-sm text-gray-600 font-medium mt-1">Recovery Rate</div>
+          </div>
+          <div class="text-center cursor-pointer transform transition-all hover:scale-105 active:scale-95" 
+               (click)="openLostItemsModal()"
+               tabindex="0"
+               role="button">
+            <div class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-400 bg-clip-text text-transparent">{{lostItems.length}}</div>
+            <div class="text-sm text-gray-600 font-medium mt-1">Lost Items</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Card -->
+      <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden animate-slide-up">
+        <!-- Search Tabs -->
+        <div class="flex border-b border-gray-200">
+          <button class="flex items-center gap-2 px-6 py-4 font-medium transition-all"
+                  [class]="searchTab === 'search' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-500 hover:bg-gray-50'"
+                  (click)="setSearchTab('search')">
+            <i class="fas fa-search"></i>
+            <span>Search Items</span>
+          </button>
+          <button class="flex items-center gap-2 px-6 py-4 font-medium transition-all"
+                  [class]="searchTab === 'report' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-500 hover:bg-gray-50'"
+                  (click)="setSearchTab('report')">
+            <i class="fas fa-plus-circle"></i>
+            <span>Report Missing</span>
+          </button>
+        </div>
+
+        <!-- Search Content -->
+        <div class="p-6">
+          <!-- Search Input -->
+          <div class="flex items-center gap-4 mb-6">
+            <div class="flex-1 relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+              </div>
+              <input type="text"
+                     [(ngModel)]="searchQuery"
+                     (keyup.enter)="performSearch()"
+                     placeholder="Search by item name, description, or location..."
+                     class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all"
+                     aria-label="Search items">
+            </div>
+            <button (click)="performSearch()"
+                    class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2">
+              <i class="fas fa-search"></i>
+              <span class="hidden sm:inline">Search</span>
+            </button>
+          </div>
+
+          <!-- Quick Filters -->
+          <div class="flex flex-wrap gap-2">
+            <button (click)="filterByRecent()"
+                    class="px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2"
+                    [class]="timeFilters[0].active ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'">
+              <i class="fas fa-star text-sm"></i>
+              <span>Recent Finds</span>
+            </button>
+            <button (click)="filterByCategory('electronics')"
+                    class="px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200">
+              <i class="fas fa-mobile-alt text-sm"></i>
+              <span>Electronics</span>
+            </button>
+            <button (click)="filterByCategory('wallets')"
+                    class="px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200">
+              <i class="fas fa-wallet text-sm"></i>
+              <span>Wallets & IDs</span>
+            </button>
+            <button (click)="filterByCategory('books')"
+                    class="px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200">
+              <i class="fas fa-book text-sm"></i>
+              <span>Books</span>
+            </button>
+            <button (click)="filterByCategory('clothing')"
+                    class="px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200">
+              <i class="fas fa-tshirt text-sm"></i>
+              <span>Clothing</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Sidebar Filters -->
+      <aside class="lg:w-80 space-y-6">
+        <!-- Filter Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <i class="fas fa-filter text-blue-500"></i>
+              Filter Results
+            </h3>
+            <div *ngIf="getActiveFiltersCount() > 0" 
+                 class="text-sm text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+              {{getActiveFiltersCount()}} active
+            </div>
+          </div>
+
+          <!-- Category Filter -->
+          <div class="mb-6">
+            <h4 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Category</h4>
+            <div class="space-y-2">
+              <label *ngFor="let category of categories"
+                     class="flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all hover:bg-gray-50"
+                     [class.bg-blue-50]="category.active"
+                     (click)="toggleCategory(category.name)">
+                <div class="flex items-center gap-3">
+                  <div class="relative">
+                    <input type="checkbox" 
+                           [checked]="category.active"
+                           class="sr-only">
+                    <div class="w-5 h-5 border-2 rounded transition-all"
+                         [class]="category.active ? 'bg-blue-500 border-blue-500' : 'border-gray-300'">
+                      <i *ngIf="category.active" class="fas fa-check text-white text-xs absolute inset-0 flex items-center justify-center"></i>
+                    </div>
+                  </div>
+                  <span class="font-medium text-gray-700">{{category.name}}</span>
+                </div>
+                <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  {{category.count}}
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Location Filter -->
+          <div class="mb-6">
+            <h4 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Location</h4>
+            <div class="space-y-2">
+              <label *ngFor="let location of locations"
+                     class="flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all hover:bg-gray-50"
+                     [class.bg-blue-50]="location.active"
+                     (click)="toggleLocation(location.name)">
+                <div class="flex items-center gap-3">
+                  <div class="relative">
+                    <input type="checkbox" 
+                           [checked]="location.active"
+                           class="sr-only">
+                    <div class="w-5 h-5 border-2 rounded transition-all"
+                         [class]="location.active ? 'bg-blue-500 border-blue-500' : 'border-gray-300'">
+                      <i *ngIf="location.active" class="fas fa-check text-white text-xs absolute inset-0 flex items-center justify-center"></i>
+                    </div>
+                  </div>
+                  <span class="font-medium text-gray-700">{{location.name}}</span>
+                </div>
+                <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  {{location.count}}
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Time Filter -->
+          <div class="mb-6">
+            <h4 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Time Found</h4>
+            <div class="space-y-2">
+              <label *ngFor="let time of timeFilters"
+                     class="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all hover:bg-gray-50"
+                     [class.bg-blue-50]="time.active"
+                     (click)="setTimeFilter(time.value)">
+                <div class="relative">
+                  <input type="radio" 
+                         name="timeFilter"
+                         [checked]="time.active"
+                         class="sr-only">
+                  <div class="w-5 h-5 border-2 rounded-full transition-all"
+                       [class]="time.active ? 'border-blue-500' : 'border-gray-300'">
+                    <div *ngIf="time.active" class="w-2.5 h-2.5 bg-blue-500 rounded-full absolute inset-0 m-auto"></div>
+                  </div>
+                </div>
+                <span class="font-medium text-gray-700">{{time.label}}</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="mb-6">
+            <h4 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Status</h4>
+            <div class="space-y-2">
+              <label *ngFor="let status of statusFilters"
+                     class="flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all hover:bg-gray-50"
+                     [class.bg-blue-50]="status.active"
+                     (click)="toggleStatus(status.value)">
+                <div class="flex items-center gap-3">
+                  <div class="relative">
+                    <input type="checkbox" 
+                           [checked]="status.active"
+                           class="sr-only">
+                    <div class="w-5 h-5 border-2 rounded transition-all"
+                         [class]="status.active ? 'bg-blue-500 border-blue-500' : 'border-gray-300'">
+                      <i *ngIf="status.active" class="fas fa-check text-white text-xs absolute inset-0 flex items-center justify-center"></i>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full"
+                         [class]="{
+                           'bg-green-500': status.value === 'available',
+                           'bg-yellow-500': status.value === 'pending',
+                           'bg-gray-400': status.value === 'claimed'
+                         }"></div>
+                    <span class="font-medium text-gray-700">{{status.label}}</span>
+                  </div>
+                </div>
+                <span class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  {{status.count}}
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <button (click)="resetFilters()"
+                  class="w-full py-3 px-4 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 focus:outline-none transition-all flex items-center justify-center gap-2">
+            <i class="fas fa-redo"></i>
+            Reset All Filters
+          </button>
+        </div>
+
+        <!-- Smart Matching Card -->
+        <div class="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+              <i class="fas fa-brain text-2xl"></i>
+            </div>
+            <h4 class="text-xl font-bold">Smart Matching</h4>
+          </div>
+          <p class="text-white/90 mb-6">
+            Our AI scans your lost items and matches them with found items automatically.
+          </p>
+          <button (click)="runSmartMatch()"
+                  class="w-full py-3 px-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-gray-100 focus:ring-2 focus:ring-white focus:outline-none transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+            <i class="fas fa-bolt"></i>
+            Run Smart Match
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="flex-1">
+        <!-- Results Header -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900">Found Items</h2>
+              <p class="text-gray-600">
+                {{filteredItems.length}} items found 
+                <span *ngIf="getActiveFiltersCount() > 0" class="text-blue-600 font-medium">
+                  ({{getActiveFiltersCount()}} filter{{getActiveFiltersCount() > 1 ? 's' : ''}} applied)
+                </span>
+              </p>
+            </div>
+            
+            <div class="flex items-center gap-4">
+              <!-- View Toggle -->
+              <div class="flex bg-gray-100 p-1 rounded-xl">
+                <button (click)="setView('grid')"
+                        [class]="activeView === 'grid' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
+                        class="p-2 rounded-lg transition-all">
+                  <i class="fas fa-th"></i>
+                </button>
+                <button (click)="setView('list')"
+                        [class]="activeView === 'list' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
+                        class="p-2 rounded-lg transition-all">
+                  <i class="fas fa-list"></i>
+                </button>
+              </div>
+              
+              <!-- Sort Dropdown -->
+              <select [(ngModel)]="sortBy"
+                      (change)="applySort()"
+                      class="border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
+                <option value="newest">Newest First</option>
+                <option value="relevant">Most Relevant</option>
+                <option value="location">By Location</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Grid/List -->
+        <div class="animate-fade-in">
+          <!-- Grid View -->
+          <div *ngIf="activeView === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div *ngFor="let item of displayedItems"
+                 class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
+                 (click)="viewItemDetails(item)"
+                 tabindex="0"
+                 role="button"
+                 (keyup.enter)="viewItemDetails(item)">
+              
+              <!-- Badge -->
+              <div *ngIf="item.badge" 
+                   class="absolute top-4 right-4 z-10 px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg"
+                   [class]="{
+                     'bg-gradient-to-r from-green-500 to-emerald-500': item.badge === 'new',
+                     'bg-gradient-to-r from-purple-500 to-pink-500': item.badge === 'featured',
+                     'bg-gradient-to-r from-red-500 to-orange-500 animate-pulse': item.badge === 'urgent'
+                   }">
+                {{item.badge | uppercase}}
+              </div>
+              
+              <!-- Image -->
+              <div class="h-48 bg-gradient-to-br from-blue-100 to-blue-50 relative overflow-hidden">
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <i [class]="item.icon + ' text-blue-300 text-5xl'"></i>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                  <span class="text-white font-semibold text-sm">{{item.category}}</span>
+                </div>
+              </div>
+              
+              <!-- Content -->
+              <div class="p-6">
+                <div class="flex justify-between items-start mb-3">
+                  <h3 class="text-lg font-bold text-gray-900 line-clamp-1">{{item.title}}</h3>
+                  <span class="px-2 py-1 rounded-full text-xs font-semibold"
+                        [class]="{
+                          'bg-green-100 text-green-800': item.status === 'available',
+                          'bg-yellow-100 text-yellow-800': item.status === 'pending',
+                          'bg-gray-100 text-gray-800': item.status === 'claimed'
+                        }">
+                    {{item.status}}
+                  </span>
+                </div>
+                
+                <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{item.description}}</p>
+                
+                <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{item.location}}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-clock"></i>
+                    <span>{{item.time}}</span>
+                  </div>
+                </div>
+                
+                <div class="flex gap-2" (click)="$event.stopPropagation()">
+                  <button (click)="claimItem(item)"
+                          [disabled]="item.status !== 'available'"
+                          class="flex-1 py-2 px-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
+                          [class]="item.status === 'available' ? 
+                            'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800' : 
+                            'bg-gray-100 text-gray-400 cursor-not-allowed'">
+                    <i [class]="item.status === 'available' ? 'fa-hand-paper' : 
+                               item.status === 'pending' ? 'fa-clock' : 'fa-check-circle'"></i>
+                    <span>{{item.status === 'available' ? 'Claim Item' : 
+                           item.status === 'pending' ? 'Pending' : 'Claimed'}}</span>
+                  </button>
+                  <button (click)="viewItemDetails(item)"
+                          class="px-4 py-2 border border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 transition-all">
+                    Details
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- List View -->
+          <div *ngIf="activeView === 'list'" class="space-y-4">
+            <div *ngFor="let item of displayedItems"
+                 class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
+                 (click)="viewItemDetails(item)"
+                 tabindex="0"
+                 role="button"
+                 (keyup.enter)="viewItemDetails(item)">
+              
+              <div class="flex flex-col md:flex-row">
+                <!-- Image -->
+                <div class="md:w-48 h-48 bg-gradient-to-br from-blue-100 to-blue-50 relative overflow-hidden">
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <i [class]="item.icon + ' text-blue-300 text-5xl'"></i>
+                  </div>
+                  <div *ngIf="item.badge" 
+                       class="absolute top-4 right-4 z-10 px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg"
+                       [class]="{
+                         'bg-gradient-to-r from-green-500 to-emerald-500': item.badge === 'new',
+                         'bg-gradient-to-r from-purple-500 to-pink-500': item.badge === 'featured',
+                         'bg-gradient-to-r from-red-500 to-orange-500 animate-pulse': item.badge === 'urgent'
+                       }">
+                    {{item.badge | uppercase}}
+                  </div>
+                  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                    <span class="text-white font-semibold text-sm">{{item.category}}</span>
+                  </div>
+                </div>
+                
+                <!-- Content -->
+                <div class="flex-1 p-6">
+                  <div class="flex flex-col md:flex-row md:items-start justify-between mb-3">
+                    <div class="flex-1">
+                      <h3 class="text-xl font-bold text-gray-900 mb-2">{{item.title}}</h3>
+                      <p class="text-gray-600 mb-4">{{item.description}}</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold mb-4 md:mb-0"
+                          [class]="{
+                            'bg-green-100 text-green-800': item.status === 'available',
+                            'bg-yellow-100 text-yellow-800': item.status === 'pending',
+                            'bg-gray-100 text-gray-800': item.status === 'claimed'
+                          }">
+                      {{item.status}}
+                    </span>
+                  </div>
+                  
+                  <div class="flex flex-wrap gap-4 text-sm text-gray-500 mb-6">
+                    <div class="flex items-center gap-2">
+                      <i class="fas fa-map-marker-alt"></i>
+                      <span class="font-medium">{{item.location}}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <i class="fas fa-clock"></i>
+                      <span class="font-medium">{{item.time}}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <i class="fas fa-tag"></i>
+                      <span class="font-medium">{{item.category}}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="flex gap-3" (click)="$event.stopPropagation()">
+                    <button (click)="claimItem(item)"
+                            [disabled]="item.status !== 'available'"
+                            class="px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2"
+                            [class]="item.status === 'available' ? 
+                              'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800' : 
+                              'bg-gray-100 text-gray-400 cursor-not-allowed'">
+                      <i [class]="item.status === 'available' ? 'fa-hand-paper' : 
+                                 item.status === 'pending' ? 'fa-clock' : 'fa-check-circle'"></i>
+                      <span>{{item.status === 'available' ? 'Claim This Item' : 
+                             item.status === 'pending' ? 'Claim Pending' : 'Successfully Claimed'}}</span>
+                    </button>
+                    <button (click)="viewItemDetails(item)"
+                            class="px-6 py-3 border border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 transition-all">
+                      View Full Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- No Results -->
+          <div *ngIf="filteredItems.length === 0" 
+               class="bg-white rounded-2xl shadow-lg border border-gray-100 p-12 text-center">
+            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fas fa-search text-blue-500 text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">No items found</h3>
+            <p class="text-gray-600 mb-6">Try adjusting your filters or search terms</p>
+            <button (click)="resetFilters()"
+                    class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all transform hover:scale-105 active:scale-95">
+              Clear All Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="filteredItems.length > 0 && totalPages > 1" 
+             class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+          <div class="text-sm text-gray-600">
+            Showing {{displayedItems.length}} of {{filteredItems.length}} items (Page {{currentPage}} of {{totalPages}})
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <button (click)="prevPage()"
+                    [disabled]="currentPage === 1"
+                    class="px-4 py-2 border border-gray-300 rounded-xl font-medium transition-all flex items-center gap-2"
+                    [class]="currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50 hover:border-blue-300'">
+              <i class="fas fa-chevron-left"></i>
+              Previous
+            </button>
+            
+            <div class="flex items-center gap-1">
+              <button *ngFor="let page of pageNumbers"
+                      (click)="goToPage(page)"
+                      [disabled]="page === '...'"
+                      class="w-10 h-10 flex items-center justify-center rounded-xl font-medium transition-all border"
+                      [class]="page === currentPage ? 
+                        'bg-gradient-to-r from-blue-600 to-blue-700 text-white border-blue-600 shadow-md' : 
+                        'text-gray-700 hover:bg-gray-100 border-gray-300 hover:border-blue-300'">
+                {{page}}
+              </button>
+            </div>
+            
+            <button (click)="nextPage()"
+                    [disabled]="currentPage === totalPages"
+                    class="px-4 py-2 border border-gray-300 rounded-xl font-medium transition-all flex items-center gap-2"
+                    [class]="currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-50 hover:border-blue-300'">
+              Next
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          
+          <div class="text-sm text-gray-600">
+            Items per page: 
+            <select [(ngModel)]="itemsPerPage" 
+                    (change)="applyFilters()"
+                    class="ml-2 border border-gray-300 rounded-lg px-2 py-1 focus:ring-1 focus:ring-blue-500 focus:outline-none">
+              <option value="4">4</option>
+              <option value="8" selected>8</option>
+              <option value="12">12</option>
+              <option value="16">16</option>
+            </select>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Smart Matching Banner -->
+    <div class="mt-12 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl p-8 text-white shadow-xl">
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-6">
+          <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+            <i class="fas fa-robot text-3xl"></i>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold mb-2">Let AI Find Your Lost Items</h3>
+            <p class="text-white/90 max-w-2xl">
+              Our smart matching system scans thousands of found items to find what you've lost
+            </p>
+          </div>
+        </div>
+        <button (click)="runSmartMatch()"
+                class="px-8 py-3 bg-white text-blue-600 font-bold rounded-xl hover:bg-gray-100 focus:ring-2 focus:ring-white focus:outline-none transition-all transform hover:scale-105 active:scale-95 flex items-center gap-3">
+          Try Smart Match
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Report Missing Item Modal -->
+<div *ngIf="showReportModal" 
+     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <!-- Modal Header -->
+    <div class="sticky top-0 bg-white border-b border-gray-200 p-6 rounded-t-2xl">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+            <i class="fas fa-plus-circle text-white"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">Report Missing Item</h3>
+            <p class="text-gray-600 text-sm">Fill in details about your lost item</p>
+          </div>
+        </div>
+        <button (click)="closeReportModal()"
+                class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6 space-y-6">
+      <!-- Photo Upload -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-3">Item Photo (Optional)</label>
+        <div class="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:border-blue-400 transition-all cursor-pointer"
+            (click)="photoUpload.click()">
+      <input type="file"
+       #photoUpload
+       accept="image/*"
+       (change)="onPhotoSelected($event)"
+       class="hidden">
+
+          
+          <div *ngIf="!photoPreview" class="space-y-3">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+              <i class="fas fa-camera text-blue-500 text-2xl"></i>
+            </div>
+            <div>
+              <p class="font-medium text-gray-900">Click to upload a photo</p>
+              <p class="text-sm text-gray-500 mt-1">JPG, PNG up to 5MB</p>
+            </div>
+          </div>
+          
+          <div *ngIf="photoPreview" class="relative">
+            <img [src]="photoPreview" alt="Preview" class="w-32 h-32 object-cover rounded-xl mx-auto">
+            <button type="button"
+                    (click)="$event.stopPropagation(); photoPreview = null; reportForm.photo = null"
+                    class="absolute top-0 right-0 -mr-2 -mt-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-all">
+              <i class="fas fa-times text-xs"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Item Title <span class="text-red-500">*</span>
+          </label>
+          <input type="text"
+                 [(ngModel)]="reportForm.title"
+                 placeholder="e.g., iPhone 13, Gold Wedding Ring"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all">
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Category <span class="text-red-500">*</span>
+          </label>
+          <select [(ngModel)]="reportForm.category"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all">
+            <option value="">Select a category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Wallets & IDs">Wallets & IDs</option>
+            <option value="Books">Books</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Documents">Documents</option>
+            <option value="Jewelry">Jewelry</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Description <span class="text-red-500">*</span>
+          </label>
+          <textarea [(ngModel)]="reportForm.description"
+                    rows="3"
+                    placeholder="Describe your lost item in detail. Include brand, color, size, unique features, and any identifying marks..."
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Location Lost <span class="text-red-500">*</span>
+          </label>
+          <input type="text"
+                 [(ngModel)]="reportForm.location"
+                 placeholder="e.g., Main Library, Student Center"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all">
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Date Lost <span class="text-red-500">*</span>
+          </label>
+          <input type="date"
+                 [(ngModel)]="reportForm.dateLost"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all">
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Contact Email <span class="text-red-500">*</span>
+          </label>
+          <input type="email"
+                 [(ngModel)]="reportForm.contactEmail"
+                 placeholder="your.email@example.com"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all">
+        </div>
+
+        <div>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox"
+                   [(ngModel)]="reportForm.reward"
+                   class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+            <span class="text-sm font-semibold text-gray-700">Offer Reward</span>
+          </label>
+          
+          <div *ngIf="reportForm.reward" class="mt-3">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Reward Amount ($)</label>
+            <input type="number"
+                   [(ngModel)]="reportForm.rewardAmount"
+                   min="0"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="sticky bottom-0 bg-white border-t border-gray-200 p-6 rounded-b-2xl">
+      <div class="flex justify-end gap-3">
+        <button (click)="closeReportModal()"
+                class="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all">
+          Cancel
+        </button>
+        <button (click)="submitReport()"
+                class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2">
+          <i class="fas fa-paper-plane"></i>
+          Submit Report
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lost Items Modal -->
+<div *ngIf="showLostItemsModal" 
+     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+    <!-- Modal Header -->
+    <div class="sticky top-0 bg-white border-b border-gray-200 p-6 rounded-t-2xl">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center">
+            <i class="fas fa-search text-white"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900">Reported Lost Items</h3>
+            <p class="text-gray-600 text-sm">{{lostItems.length}} items reported as lost</p>
+          </div>
+        </div>
+        <button (click)="closeLostItemsModal()"
+                class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Lost Items Grid -->
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div *ngFor="let item of lostItems"
+             class="bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg transition-all">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl flex items-center justify-center">
+                <i [class]="getCategoryIcon(item.category) + ' text-blue-600'"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-gray-900">{{item.title}}</h4>
+                <span class="px-2 py-1 rounded-full text-xs font-semibold mt-1"
+                      [class]="getStatusColor(item.status)">
+                  {{item.status | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div *ngIf="item.reward" 
+                 class="bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold">
+              ${{item.rewardAmount}} REWARD
+            </div>
+          </div>
+          
+          <p class="text-gray-600 text-sm mb-4">{{item.description}}</p>
+          
+          <div class="space-y-2 text-sm text-gray-500 mb-4">
+            <div class="flex items-center gap-2">
+              <i class="fas fa-map-marker-alt text-blue-500"></i>
+              <span>Lost at: {{item.location}}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fas fa-calendar-alt text-blue-500"></i>
+              <span>Date: {{formatDate(item.dateLost)}}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fas fa-tag text-blue-500"></i>
+              <span>Category: {{item.category}}</span>
+            </div>
+          </div>
+          
+          <div class="pt-4 border-t border-gray-100">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 text-sm">
+                <i class="fas fa-envelope text-gray-400"></i>
+                <span class="text-gray-600">{{item.contactEmail}}</span>
+              </div>
+              <button class="text-blue-600 hover:text-blue-700 text-sm font-semibold flex items-center gap-1">
+                <i class="fas fa-eye"></i>
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="lostItems.length === 0" class="text-center py-12">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-search text-gray-400 text-3xl"></i>
+        </div>
+        <h4 class="text-lg font-bold text-gray-900 mb-2">No lost items reported yet</h4>
+        <p class="text-gray-600 mb-6">Be the first to report a lost item!</p>
+        <button (click)="closeLostItemsModal(); openReportModal()"
+                class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 mx-auto">
+          <i class="fas fa-plus-circle"></i>
+          Report First Item
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="sticky bottom-0 bg-white border-t border-gray-200 p-6 rounded-b-2xl">
+      <div class="flex justify-between items-center">
+        <p class="text-sm text-gray-600">
+          Found a match? Contact the owner directly via email.
+        </p>
+        <button (click)="openReportModal()"
+                class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2">
+          <i class="fas fa-plus-circle"></i>
+          Report Another Item
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

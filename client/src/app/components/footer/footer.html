@@ -1,0 +1,130 @@
+<footer class="bg-gray-900 text-white pt-12 pb-6">
+  <!-- Main Footer Content -->
+  <div class="max-w-7xl mx-auto px-4">
+    <!-- Top Section: Logo & Newsletter -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10 border-b border-gray-800">
+      <!-- Logo & Description -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center">
+            <i class="fas fa-search text-white text-lg"></i>
+          </div>
+          <h2 class="text-2xl font-bold bg-gradient-to-r from-primary via-primary-light to-accent bg-clip-text text-transparent">
+            CampusFind
+          </h2>
+        </div>
+        <p class="text-gray-400 text-sm max-w-md">
+          A community-driven platform helping students reconnect with lost items. Simple, secure, and efficient.
+        </p>
+        <div class="flex gap-4 pt-2">
+          <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary rounded-full flex items-center justify-center transition-colors duration-300">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary rounded-full flex items-center justify-center transition-colors duration-300">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary rounded-full flex items-center justify-center transition-colors duration-300">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-primary rounded-full flex items-center justify-center transition-colors duration-300">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-6">
+        <div>
+          <h3 class="font-bold text-lg mb-4 text-white">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a (click) = "find()" class="text-gray-400 hover:text-primary transition-colors text-sm" >Find Item</a></li>
+            <li><a (click) = "report()" class="text-gray-400 hover:text-primary transition-colors text-sm">Report Item</a></li>
+            <li><a (click) = "recent()" class="text-gray-400 hover:text-primary transition-colors text-sm">Recent Finds</a></li>
+            <li><a (click) = "success()" class = " hover:text-primary transition-colors text-sm">Success Stories</a></li>
+            <li><a href= "#" class="text-gray-400 hover:text-primary transition-colors text-sm">How It Works</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-4 text-white">Resources</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Safety Tips</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">FAQ</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Blog</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Campus Partners</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-4 text-white">Legal</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Privacy Policy</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Terms of Service</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Cookie Policy</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Community Guidelines</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-primary transition-colors text-sm">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-800 rounded-2xl p-6">
+        <h3 class="font-bold text-lg mb-3 text-white">Stay Updated</h3>
+        <p class="text-gray-400 text-sm mb-4">Get notified when items matching your description are found.</p>
+        <div class="space-y-3">
+          <div class="relative">
+            <input 
+              type="email" 
+              placeholder="Enter your email" 
+              class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+            <i class="fas fa-envelope absolute right-3 top-3.5 text-gray-500"></i>
+          </div>
+          <button class="w-full bg-gradient-to-r from-primary to-primary-light hover:from-primary-light hover:to-primary text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
+            Subscribe
+          </button>
+        </div>
+        <p class="text-gray-500 text-xs mt-3">We respect your privacy. Unsubscribe at any time.</p>
+      </div>
+    </div>
+
+    <!-- Bottom Section -->
+  
+
+    <!-- Copyright -->
+    <div class="pt-8 border-t border-gray-800 text-center">
+      <p class="text-gray-500 text-sm">
+        © 2024 CampusFind. All rights reserved. Made with 
+        <i class="fas fa-heart text-primary mx-1"></i> 
+        for students worldwide.
+      </p>
+      <p class="text-gray-600 text-xs mt-2">
+        CampusFind is not responsible for lost items but dedicated to helping you find them.
+      </p>
+    </div>
+  </div>
+
+  <!-- Floating Help Button -->
+  <div class="fixed bottom-6 right-6 z-50">
+    <button class="group bg-gradient-to-br from-primary to-primary-light text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 flex items-center justify-center animate-pulse-slow">
+      <i class="fas fa-question text-lg"></i>
+      <span class="absolute -top-12 right-0 bg-gray-900 text-white text-xs px-3 py-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+        Need Help?
+      </span>
+    </button>
+  </div>
+
+  <style>
+    @keyframes pulse-slow {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+      }
+    }
+    
+    .animate-pulse-slow {
+      animation: pulse-slow 3s infinite;
+    }
+  </style>
+</footer>

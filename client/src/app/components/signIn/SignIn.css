@@ -1,0 +1,36 @@
+/* Add smooth transitions for form switching */
+.form-switch {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Password strength indicator */
+.password-strength .progress {
+  border-radius: 2px;
+}
+
+/* Custom card hover effects */
+.card-hover:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+/* Input focus effects */
+.form-control:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+/* Animation for form switch */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+*ngIf {
+  animation: fadeIn 0.3s ease-out;
+}

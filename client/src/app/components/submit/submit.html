@@ -1,0 +1,714 @@
+<!-- Main Content -->
+    <app-navbar></app-navbar>
+
+<section class="min-h-screen py-10 md:py-16">
+    <div class="max-w-7xl mx-auto px-4">
+        <!-- Header Section -->
+        <div class="text-center max-w-3xl mx-auto mb-12">
+            <h1 class="main-title">
+                Report a 
+                <span class="title-highlight lost-text">
+                    Lost
+                    <span class="underline-effect"></span>
+                </span> 
+                or 
+                <span class="title-highlight found-text">
+                    Found
+                    <span class="underline-effect"></span>
+                </span> 
+                Item
+            </h1>
+            <p class="subtitle">
+                Help reunite lost items with their owners. Select what you'd like to report below.
+            </p>
+        </div>
+
+        <!-- Report Type Selection Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+            <!-- Lost Item Card -->
+            <div class="type-card lost" [class.active]="selectedReportType === 'lost'" (click)="selectReportType('lost')">
+                <div class="type-card-inner">
+                    <div class="type-card-content">
+                        <div class="type-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="card-title">Lost Something?</h3>
+                        <p class="card-description">
+                            Report your lost item and increase your chances of getting it back with our community help.
+                        </p>
+                        <div class="card-action lost-action">
+                            <span>Report Lost Item</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        <div class="active-badge" *ngIf="selectedReportType === 'lost'">
+                            <i class="fas fa-check-circle"></i>
+                            Currently Selected
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Found Item Card -->
+            <div class="type-card found" [class.active]="selectedReportType === 'found'" (click)="selectReportType('found')">
+                <div class="type-card-inner">
+                    <div class="type-card-content">
+                        <div class="type-icon">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <h3 class="card-title">Found Something?</h3>
+                        <p class="card-description">
+                            Help return a found item to its owner. Your good deed could make someone's day.
+                        </p>
+                        <div class="card-action found-action">
+                            <span>Report Found Item</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        <div class="active-badge" *ngIf="selectedReportType === 'found'">
+                            <i class="fas fa-check-circle"></i>
+                            Currently Selected
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Form Container -->
+        <div class="form-container" [class.slide-in]="true">
+            <!-- Lost Item Form -->
+            <div *ngIf="selectedReportType === 'lost'" class="lost-form">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left: Form -->
+                    <div class="lg:col-span-2">
+                        <div class="form-card">
+                            <!-- Form Header -->
+                            <div class="form-header">
+                                <div class="header-icon lost-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div>
+                                    <h2 class="form-title">Report Lost Item</h2>
+                                    <p class="form-subtitle">Fill in details about your lost item</p>
+                                </div>
+                            </div>
+
+                            <!-- Lost Item Specific Fields -->
+                            <form [formGroup]="lostItemForm" (ngSubmit)="onLostSubmit()" class="space-y-8">
+                                <!-- Item Details -->
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="form-label">
+                                            Item Title <span class="required">*</span>
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            formControlName="title"
+                                            placeholder="e.g., MacBook Pro 14-inch Space Gray"
+                                            class="form-input"
+                                        >
+                                        <div *ngIf="lostItemForm.get('title')?.invalid && lostItemForm.get('title')?.touched" 
+                                             class="error-message">
+                                            Item title is required
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label">
+                                            Category <span class="required">*</span>
+                                        </label>
+                                        <div class="category-grid">
+                                            <div *ngFor="let cat of categories" 
+                                                 class="category-option"
+                                                 [class.selected]="lostItemForm.get('category')?.value === cat.value"
+                                                 (click)="lostItemForm.patchValue({ category: cat.value })">
+                                                <div class="option-content">
+                                                    <i class="fas {{cat.icon}}" [ngClass]="{
+                                                        'text-primary': cat.value === 'electronics',
+                                                        'text-accent': cat.value === 'documents',
+                                                        'text-secondary': cat.value === 'accessories',
+                                                        'text-red-500': cat.value === 'personal'
+                                                    }"></i>
+                                                    <span class="option-label">{{cat.label}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label">
+                                            Description <span class="required">*</span>
+                                        </label>
+                                        <textarea 
+                                            formControlName="description"
+                                            placeholder="Describe your lost item in detail..."
+                                            class="form-textarea"
+                                            rows="4"
+                                        ></textarea>
+                                        <div class="hint">
+                                            <i class="fas fa-lightbulb text-primary"></i>
+                                            Be as detailed as possible to help others identify your item
+                                        </div>
+                                        <div *ngIf="lostItemForm.get('description')?.invalid && lostItemForm.get('description')?.touched" 
+                                             class="error-message">
+                                            Description is required
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="form-label">
+                                                Date Lost <span class="required">*</span>
+                                            </label>
+                                            <div class="relative">
+                                                <input 
+                                                    type="date" 
+                                                    formControlName="dateLost"
+                                                    class="form-input"
+                                                >
+                                                <i class="fas fa-calendar-alt input-icon"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label">
+                                                Approximate Time Lost
+                                            </label>
+                                            <div class="relative">
+                                                <input 
+                                                    type="time" 
+                                                    formControlName="timeLost"
+                                                    class="form-input"
+                                                >
+                                                <i class="fas fa-clock input-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label">
+                                            Last Known Location <span class="required">*</span>
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            formControlName="location"
+                                            placeholder="e.g., Main Library, 2nd Floor, Study Area B"
+                                            class="form-input"
+                                        >
+                                        <div *ngIf="lostItemForm.get('location')?.invalid && lostItemForm.get('location')?.touched" 
+                                             class="error-message">
+                                            Location is required
+                                        </div>
+                                    </div>
+
+                                    <!-- Lost Item Specific Questions -->
+                                    <div class="info-card lost-info">
+                                        <h4 class="info-title">
+                                            <i class="fas fa-question-circle"></i>
+                                            Additional Information
+                                        </h4>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="form-label">
+                                                    Reward Offered
+                                                </label>
+                                                <div class="flex items-center space-x-4">
+                                                    <label class="radio-label">
+                                                        <input 
+                                                            type="radio" 
+                                                            formControlName="reward"
+                                                            value="yes"
+                                                            class="radio-input"
+                                                        >
+                                                        <span>Yes</span>
+                                                    </label>
+                                                    <label class="radio-label">
+                                                        <input 
+                                                            type="radio" 
+                                                            formControlName="reward"
+                                                            value="no"
+                                                            class="radio-input"
+                                                        >
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="form-label">
+                                                    Item Value (Approximate)
+                                                </label>
+                                                <select formControlName="value" class="form-input">
+                                                    <option value="">Select value range</option>
+                                                    <option value="low">Under $50</option>
+                                                    <option value="medium">$50 - $200</option>
+                                                    <option value="high">$200 - $500</option>
+                                                    <option value="very-high">Over $500</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Photo Upload -->
+                                    <div>
+                                        <label class="form-label">
+                                            Upload Reference Photos
+                                        </label>
+                                        <input 
+                                            type="file" 
+                                            id="lostFileInput"
+                                            (change)="onFileSelected($event, 'lost')"
+                                            accept="image/*"
+                                            multiple
+                                            class="hidden"
+                                        >
+                                        <div class="photo-upload-area" (click)="triggerFileInput('lost')">
+                                            <div class="upload-content">
+                                                <div class="upload-icon lost-upload">
+                                                    <i class="fas fa-cloud-upload-alt"></i>
+                                                </div>
+                                                <h4 class="upload-title">Drag & Drop or Click to Upload</h4>
+                                                <p class="upload-description">
+                                                    Upload photos of a similar item to help others identify it
+                                                </p>
+                                                <button type="button" class="upload-btn lost-btn">
+                                                    <i class="fas fa-images"></i>
+                                                    Choose Files
+                                                </button>
+                                                <p class="upload-note">
+                                                    Maximum 5 photos • JPG, PNG up to 5MB each
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Form Actions -->
+                                <div class="form-actions">
+                                    <button type="button" (click)="switchToFound()" class="btn-secondary">
+                                        <i class="fas fa-exchange-alt"></i>
+                                        Switch to Found Item
+                                    </button>
+                                    <button type="submit" class="btn-primary lost-btn" [disabled]="lostItemForm.invalid">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Submit Lost Item Report
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Right: Guidance & Tips -->
+                    <div class="sidebar">
+                        <!-- Tips Card -->
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon lost-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <h3 class="stat-title">Tips for Lost Items</h3>
+                            </div>
+                            <ul class="tips-list">
+                                <li class="tip-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Retrace your steps from the last time you remember having the item</span>
+                                </li>
+                                <li class="tip-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Check with nearby lost & found offices immediately</span>
+                                </li>
+                                <li class="tip-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Include serial numbers and unique identifiers in your description</span>
+                                </li>
+                                <li class="tip-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Be specific about time and location details</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Recovery Stats -->
+                        <div class="stat-card">
+                            <h3 class="stat-title">Lost Item Recovery Rate</h3>
+                            <div class="space-y-4">
+                                <div *ngFor="let stat of lostRecoveryStats" class="stat-item">
+                                    <div class="stat-info">
+                                        <span class="stat-category">{{stat.category}}</span>
+                                        <span class="stat-percentage">{{stat.percentage}}%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" [style.width.%]="stat.percentage" [style.backgroundColor]="stat.color"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recently Found -->
+                        <div class="stat-card">
+                            <h3 class="stat-title">
+                                <i class="fas fa-history text-primary"></i>
+                                Recently Found Items
+                            </h3>
+                            <div class="space-y-4">
+                                <div *ngFor="let item of recentlyFoundItems" class="recent-item">
+                                    <div class="item-icon" [ngClass]="{'bg-primary/20': item.status === 'found', 'bg-accent/20': item.status === 'claimed'}">
+                                        <i class="fas {{item.icon}}" [ngClass]="{'text-primary': item.status === 'found', 'text-accent': item.status === 'claimed'}"></i>
+                                    </div>
+                                    <div class="item-info">
+                                        <p class="item-title">{{item.title}}</p>
+                                        <p class="item-time">{{item.time}}</p>
+                                    </div>
+                                    <span class="item-status" [ngClass]="{'bg-green-100 text-green-800': item.status === 'found', 'bg-blue-100 text-blue-800': item.status === 'claimed'}">
+                                        {{item.status === 'found' ? 'Found' : 'Claimed'}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Found Item Form -->
+            <div *ngIf="selectedReportType === 'found'" class="found-form">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left: Form -->
+                    <div class="lg:col-span-2">
+                        <div class="form-card">
+                            <!-- Form Header -->
+                            <div class="form-header">
+                                <div class="header-icon found-icon">
+                                    <i class="fas fa-hand-holding-heart"></i>
+                                </div>
+                                <div>
+                                    <h2 class="form-title">Report Found Item</h2>
+                                    <p class="form-subtitle">Help return a found item to its owner</p>
+                                </div>
+                            </div>
+
+                            <!-- Found Item Specific Fields -->
+                            <form [formGroup]="foundItemForm" (ngSubmit)="onFoundSubmit()" class="space-y-8">
+                                <!-- Item Details -->
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="form-label">
+                                            Item Title <span class="required">*</span>
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            formControlName="title"
+                                            placeholder="e.g., Black Leather Wallet with Credit Cards"
+                                            class="form-input"
+                                        >
+                                        <div *ngIf="foundItemForm.get('title')?.invalid && foundItemForm.get('title')?.touched" 
+                                             class="error-message">
+                                            Item title is required
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label">
+                                            Category <span class="required">*</span>
+                                        </label>
+                                        <div class="category-grid">
+                                            <div *ngFor="let cat of categories" 
+                                                 class="category-option"
+                                                 [class.selected]="foundItemForm.get('category')?.value === cat.value"
+                                                 (click)="foundItemForm.patchValue({ category: cat.value })">
+                                                <div class="option-content">
+                                                    <i class="fas {{cat.icon}}" [ngClass]="{
+                                                        'text-primary': cat.value === 'electronics',
+                                                        'text-accent': cat.value === 'documents',
+                                                        'text-secondary': cat.value === 'accessories',
+                                                        'text-green-500': cat.value === 'personal'
+                                                    }"></i>
+                                                    <span class="option-label">{{cat.label}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label">
+                                            Description <span class="required">*</span>
+                                        </label>
+                                        <textarea 
+                                            formControlName="description"
+                                            placeholder="Describe the found item in detail..."
+                                            class="form-textarea"
+                                            rows="4"
+                                        ></textarea>
+                                        <div class="hint">
+                                            <i class="fas fa-lightbulb text-green-500"></i>
+                                            Describe any personal information without revealing sensitive details
+                                        </div>
+                                        <div *ngIf="foundItemForm.get('description')?.invalid && foundItemForm.get('description')?.touched" 
+                                             class="error-message">
+                                            Description is required
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="form-label">
+                                                Date Found <span class="required">*</span>
+                                            </label>
+                                            <div class="relative">
+                                                <input 
+                                                    type="date" 
+                                                    formControlName="dateFound"
+                                                    class="form-input"
+                                                >
+                                                <i class="fas fa-calendar-alt input-icon"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label">
+                                                Approximate Time Found
+                                            </label>
+                                            <div class="relative">
+                                                <input 
+                                                    type="time" 
+                                                    formControlName="timeFound"
+                                                    class="form-input"
+                                                >
+                                                <i class="fas fa-clock input-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label">
+                                            Found Location <span class="required">*</span>
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            formControlName="location"
+                                            placeholder="e.g., Student Center, Cafeteria, Table near window"
+                                            class="form-input"
+                                        >
+                                        <div *ngIf="foundItemForm.get('location')?.invalid && foundItemForm.get('location')?.touched" 
+                                             class="error-message">
+                                            Location is required
+                                        </div>
+                                    </div>
+
+                                    <!-- Found Item Specific Questions -->
+                                    <div class="info-card found-info">
+                                        <h4 class="info-title">
+                                            <i class="fas fa-question-circle"></i>
+                                            Found Item Handling
+                                        </h4>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="form-label">
+                                                    Item Condition
+                                                </label>
+                                                <select formControlName="condition" class="form-input">
+                                                    <option value="">Select condition</option>
+                                                    <option value="new">Like New</option>
+                                                    <option value="good">Good</option>
+                                                    <option value="fair">Fair (Some wear)</option>
+                                                    <option value="damaged">Damaged</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="form-label">
+                                                    Personal Information Visible
+                                                </label>
+                                                <div class="flex items-center space-x-4">
+                                                    <label class="radio-label">
+                                                        <input 
+                                                            type="radio" 
+                                                            formControlName="personalInfo"
+                                                            value="yes"
+                                                            class="radio-input"
+                                                        >
+                                                        <span>Yes (e.g., name, ID)</span>
+                                                    </label>
+                                                    <label class="radio-label">
+                                                        <input 
+                                                            type="radio" 
+                                                            formControlName="personalInfo"
+                                                            value="no"
+                                                            class="radio-input"
+                                                        >
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Photo Upload -->
+                                    <div>
+                                        <label class="form-label">
+                                            Upload Photos of Found Item <span class="required">*</span>
+                                        </label>
+                                        <input 
+                                            type="file" 
+                                            id="foundFileInput"
+                                            (change)="onFileSelected($event, 'found')"
+                                            accept="image/*"
+                                            multiple
+                                            class="hidden"
+                                        >
+                                        <div class="photo-upload-area" (click)="triggerFileInput('found')">
+                                            <div class="upload-content">
+                                                <div class="upload-icon found-upload">
+                                                    <i class="fas fa-camera"></i>
+                                                </div>
+                                                <h4 class="upload-title">Upload Clear Photos</h4>
+                                                <p class="upload-description">
+                                                    Take photos from multiple angles to help the owner identify their item
+                                                </p>
+                                                <button type="button" class="upload-btn found-btn">
+                                                    <i class="fas fa-camera"></i>
+                                                    Upload Photos
+                                                </button>
+                                                <p class="upload-note">
+                                                    Maximum 5 photos • JPG, PNG up to 5MB each
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Contact Information -->
+                                    <div>
+                                        <h4 class="section-title">
+                                            <i class="fas fa-user-check text-primary"></i>
+                                            Your Contact Information
+                                        </h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label class="form-label">
+                                                    Your Name <span class="required">*</span>
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    formControlName="name"
+                                                    placeholder="Enter your name"
+                                                    class="form-input"
+                                                >
+                                            </div>
+                                            <div>
+                                                <label class="form-label">
+                                                    Email Address <span class="required">*</span>
+                                                </label>
+                                                <input 
+                                                    type="email" 
+                                                    formControlName="email"
+                                                    placeholder="your.email@example.com"
+                                                    class="form-input"
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Form Actions -->
+                                <div class="form-actions">
+                                    <button type="button" (click)="switchToLost()" class="btn-secondary">
+                                        <i class="fas fa-exchange-alt"></i>
+                                        Switch to Lost Item
+                                    </button>
+                                    <button type="submit" class="btn-primary found-btn" [disabled]="foundItemForm.invalid">
+                                        <i class="fas fa-hand-holding-heart"></i>
+                                        Submit Found Item Report
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Right: Guidance & Tips -->
+                    <div class="sidebar">
+                        <!-- Tips Card -->
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon found-icon">
+                                    <i class="fas fa-hand-holding-heart"></i>
+                                </div>
+                                <h3 class="stat-title">Tips for Found Items</h3>
+                            </div>
+                            <ul class="tips-list">
+                                <li class="tip-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Do not share personal information from the item publicly</span>
+                                </li>
+                                <li class="tip-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Take clear photos from multiple angles</span>
+                                </li>
+                                <li class="tip-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Note the exact location where you found the item</span>
+                                </li>
+                                <li class="tip-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>If it contains IDs or cards, consider turning it in to the appropriate office</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Return Stats -->
+                        <div class="stat-card">
+                            <h3 class="stat-title">Found Item Return Rate</h3>
+                            <div class="space-y-4">
+                                <div *ngFor="let stat of foundReturnStats" class="stat-item">
+                                    <div class="stat-info">
+                                        <span class="stat-category">{{stat.category}}</span>
+                                        <span class="stat-percentage">{{stat.percentage}}%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" [style.width.%]="stat.percentage" [style.backgroundColor]="stat.color"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recently Lost -->
+                        <div class="stat-card">
+                            <h3 class="stat-title">
+                                <i class="fas fa-search text-red-500"></i>
+                                Recently Lost Items
+                            </h3>
+                            <div class="space-y-4">
+                                <div *ngFor="let item of recentlyLostItems" class="recent-item">
+                                    <div class="item-icon bg-red-100">
+                                        <i class="fas {{item.icon}} text-red-500"></i>
+                                    </div>
+                                    <div class="item-info">
+                                        <p class="item-title">{{item.title}}</p>
+                                        <p class="item-time">{{item.time}}</p>
+                                    </div>
+                                    <span class="item-status bg-red-100 text-red-800">
+                                        Lost
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Support Card -->
+                        <div class="stat-card support-card">
+                            <div class="support-header">
+                                <div class="support-icon">
+                                    <i class="fas fa-headset"></i>
+                                </div>
+                                <div>
+                                    <h3 class="support-title">Need Help?</h3>
+                                    <p class="support-subtitle">We're here to assist you</p>
+                                </div>
+                            </div>
+                            <p class="support-text">
+                                Not sure how to handle a found item? Contact our support team for guidance.
+                            </p>
+                            <button class="support-btn">
+                                <i class="fas fa-comments"></i>
+                                Get Help
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<app-footer></app-footer>
