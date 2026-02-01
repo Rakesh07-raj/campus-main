@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const path = require("path");
 const connectMongoDB = require("./utils/mongoDBConnection");
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +15,9 @@ app.use(cors({
     origin: ["http://localhost:5173", "http://localhost:4200"],
     credentials: true
 }))
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 connectMongoDB();
 

@@ -4,11 +4,11 @@ const handleCheckAuthentication = (req, res, next) => {
     try {
         req.user = null;
         const token = req.cookies?.auth_token;
-        if (!token) return res.status(404).json({ msg: "Please Login First!" });
+        if (!token) return res.status(401).json({ msg: "Please Login First!" });
 
         const user = verifyTokenAndSendPayload(token);
 
-        if (!user) return res.status(400).json({ msg: "Please Login First!" });
+        if (!user) return res.status(401).json({ msg: "Invalid token. Please Login Again!" });
 
         req.user = user;
         next();
@@ -18,4 +18,5 @@ const handleCheckAuthentication = (req, res, next) => {
     }
 }
 
-module.exports = handleCheckAuthentication
+// Alias for better naming
+module.exports = handleCheckAuthentication;

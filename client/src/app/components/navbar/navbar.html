@@ -1,12 +1,12 @@
 <nav class="w-full fixed top-5 z-50">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 bg-white backdrop-blur-2xl rounded-2xl">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white backdrop-blur-2xl rounded-2xl">
     <div class="flex justify-between items-center h-16">
 
       <!-- Logo / Brand -->
       <div class="flex items-center space-x-3">
         <div class="relative">
           <div
-            class="w-10 h-10 bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] rounded-xl flex items-center justify-center shadow-lg">
+            class="w-10 h-10 bg-linear-to-br from-[#6D28D9] to-[#8B5CF6] rounded-xl flex items-center justify-center shadow-lg">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -20,7 +20,7 @@
           routerLink="/"
           routerLinkActive="text-[#8B5CF6]"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="text-xl font-bold bg-gradient-to-r from-[#6D28D9] via-[#6D28D9] to-[#8B5CF6] bg-clip-text text-transparent">
+          class="text-xl font-bold bg-linear-to-r from-[#6D28D9] via-[#6D28D9] to-[#8B5CF6] bg-clip-text text-transparent">
           CampusFind
         </a>
       </div>
@@ -55,22 +55,10 @@
           <span>About</span>
         </a>
 
-        <!-- Submit -->
-        <a
-          routerLink="/submit"
-          routerLinkActive="bg-white text-[#6D28D9]"
-          class="flex items-center space-x-2 px-3 py-2 rounded-full text-[#6B7280] font-semibold text-sm hover:text-[#6D28D9] hover:bg-white/60 transition-all duration-300">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 4v16m8-8H4">
-            </path>
-          </svg>
-          <span>Submit</span>
-        </a>
 
-        <!-- Retrieve -->
+        <!-- Lost/Found -->
         <a
-          routerLink="/retrive_item"
+          routerLink="/lost-found"
           routerLinkActive="bg-white text-[#6D28D9]"
           class="flex items-center space-x-2 px-3 py-2 rounded-full text-[#6B7280] font-semibold text-sm hover:text-[#6D28D9] hover:bg-white/60 transition-all duration-300">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,24 +66,98 @@
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
             </path>
           </svg>
-          <span>Retrieve</span>
+          <span>Lost/Found</span>
+        </a>
+
+        
+        <!-- Report -->
+        <a
+          routerLink="/submit"
+          class="flex items-center space-x-2 px-3 py-2 rounded-full text-[#6B7280] font-semibold text-sm hover:text-[#6D28D9] hover:bg-white/60 transition-all duration-300"
+          routerLinkActive="bg-white text-[#6D28D9] hover:bg-white"
+          >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 4v16m8-8H4">
+            </path>
+          </svg>
+          <span>Report</span>
+        </a>
+        <!-- My Activity -->
+        <a
+          routerLink="/lost-found/my-activity"
+          routerLinkActive="bg-white text-[#6D28D9]"
+          class="flex items-center space-x-2 px-3 py-2 rounded-full text-[#6B7280] font-semibold text-sm hover:text-[#6D28D9] hover:bg-white/60 transition-all duration-300">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+            </path>
+          </svg>
+          <span>My Activity</span>
         </a>
 
       </div>
 
-      <!-- CTA Buttons -->
+      <!-- CTA Buttons / User Profile -->
       <div class="hidden md:flex items-center gap-3">
-        <button
-          routerLink="/login"
-          class="px-4 py-2.5 text-sm font-semibold rounded-lg border border-[#6D28D9] text-[#6D28D9] hover:bg-[#FAF5FF] transition-all duration-300">
-          Login
-        </button>
+        @if (!userStore().id) {
+          <button
+            routerLink="/signin"
+            class="px-4 py-2.5 text-sm font-semibold rounded-lg border border-[#6D28D9] text-[#6D28D9] hover:bg-[#FAF5FF] transition-all duration-300">
+            Login
+          </button>
 
-        <button
-          routerLink="/register"
-          class="px-3 py-2.5 text-sm font-semibold rounded-lg bg-primary/80 text-white hover:bg-primary transition-all duration-300">
-          Sign Up
-        </button>
+          <button
+            routerLink="/signup"
+            class="px-3 py-2.5 text-sm font-semibold rounded-lg bg-primary/80 text-white hover:bg-primary transition-all duration-300">
+            Sign Up
+          </button>
+        } @else {
+          <!-- User Profile Dropdown -->
+          <div class="relative">
+             <button 
+               (click)="toggleMenu()"
+               class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none">
+                <div class="w-8 h-8 rounded-full bg-[#6D28D9] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                  {{ userStore().name.charAt(0).toUpperCase() }}
+                </div>
+                <span class="text-[#6D28D9] font-medium hidden sm:block">{{ userStore().name }}</span>
+                <svg class="w-4 h-4 text-gray-400 transition-transform duration-200" [class.rotate-180]="isMenuOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+             </button>
+
+             <!-- Dropdown Menu -->
+             @if (isMenuOpen) {
+               <div class="absolute right-0 top-12 w-48 bg-white rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 py-2 transform transition-all duration-200 origin-top-right z-50">
+                 <!-- Header -->
+                 <div class="px-4 py-2 border-b border-gray-100 mb-1">
+                   <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Signed in as</p>
+                   <p class="text-sm font-semibold text-gray-900 truncate">{{ userStore().email }}</p>
+                 </div>
+
+                 <!-- Items -->
+                 <a 
+                   routerLink="/profile" 
+                   (click)="toggleMenu()"
+                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-[#FAF5FF] hover:text-[#6D28D9] transition-colors cursor-pointer">
+                   Your Profile
+                 </a>
+                 
+                 <div class="border-t border-gray-100 my-1"></div>
+                 
+                 <button
+                   (click)="handleLogout()"
+                   class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                   </svg>
+                   Sign out
+                 </button>
+               </div>
+             }
+          </div>
+        }
       </div>
 
     </div>
