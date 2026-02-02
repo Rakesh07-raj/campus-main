@@ -1,714 +1,649 @@
 <!-- Main Content -->
-    <app-navbar></app-navbar>
+<section class="min-h-screen pt-24 pb-16 bg-white relative overflow-hidden">
+    <!-- Background Decorative Elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <!-- Primary Theme (Lost) -->
+        <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-primary/5 to-primary-light/5 blur-3xl transition-all duration-700" 
+             [class.opacity-100]="selectedReportType === 'lost'"
+             [class.opacity-0]="selectedReportType !== 'lost'"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-tr from-primary/5 to-primary-light/5 blur-3xl transition-all duration-700"
+             [class.opacity-100]="selectedReportType === 'lost'"
+             [class.opacity-0]="selectedReportType !== 'lost'"></div>
+        
+        <!-- Secondary Theme (Found) -->
+        <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-secondary/5 to-accent/5 blur-3xl transition-all duration-700"
+             [class.opacity-100]="selectedReportType === 'found'"
+             [class.opacity-0]="selectedReportType !== 'found'"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-tr from-secondary/5 to-accent/5 blur-3xl transition-all duration-700"
+             [class.opacity-100]="selectedReportType === 'found'"
+             [class.opacity-0]="selectedReportType !== 'found'"></div>
+        
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full transition-all duration-700"
+             [class]="selectedReportType === 'lost' ? 'bg-primary/5' : 'bg-secondary/5'"
+             [class.opacity-50]="selectedReportType === 'lost'"
+             [class.opacity-30]="selectedReportType !== 'lost'"></div>
+    </div>
 
-<section class="min-h-screen py-10 md:py-16">
-    <div class="max-w-7xl mx-auto px-4">
+    <div class="max-w-4xl mx-auto px-4 relative z-10">
         <!-- Header Section -->
-        <div class="text-center max-w-3xl mx-auto mb-12">
-            <h1 class="main-title">
-                Report a 
-                <span class="title-highlight lost-text">
-                    Lost
-                    <span class="underline-effect"></span>
-                </span> 
-                or 
-                <span class="title-highlight found-text">
-                    Found
-                    <span class="underline-effect"></span>
-                </span> 
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-8 relative overflow-hidden transition-all duration-500"
+                 [class]="selectedReportType === 'lost' ? 
+                           'bg-gradient-to-br from-primary/10 to-primary-light/10' : 
+                           'bg-gradient-to-br from-secondary/10 to-accent/10'">
+                <div class="absolute inset-0 transition-all duration-500"
+                     [class]="selectedReportType === 'lost' ? 
+                               'bg-gradient-to-br from-primary/20 to-primary-light/20 opacity-0 hover:opacity-100' : 
+                               'bg-gradient-to-br from-secondary/20 to-accent/20 opacity-0 hover:opacity-100'"></div>
+                <!-- Search Icon for Lost / Heart Icon for Found -->
+                <svg class="w-12 h-12 relative z-10 transition-all duration-500" 
+                     [class.text-primary]="selectedReportType === 'lost'"
+                     [class.text-secondary]="selectedReportType === 'found'"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path *ngIf="selectedReportType === 'lost'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    <path *ngIf="selectedReportType === 'found'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+                Report 
+                <span class="relative">
+                    <span class="transition-all duration-500"
+                          [class.text-primary]="selectedReportType === 'lost'"
+                          [class.text-secondary]="selectedReportType === 'found'">
+                        {{selectedReportType === 'lost' ? 'Lost' : 'Found'}}
+                    </span>
+                    <span class="absolute -bottom-2 left-0 w-full h-2 rounded-full transition-all duration-500"
+                          [class]="selectedReportType === 'lost' ? 'bg-primary/10' : 'bg-secondary/10'"></span>
+                </span>
                 Item
             </h1>
-            <p class="subtitle">
-                Help reunite lost items with their owners. Select what you'd like to report below.
+            <p class="text-lg text-text-secondary max-w-2xl mx-auto">
+                {{selectedReportType === 'lost' ? 
+                  'Fill in the details below to help our community find your lost belongings.' : 
+                  'Help reunite found items with their owners by providing details below.'}}
             </p>
         </div>
 
-        <!-- Report Type Selection Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
-            <!-- Lost Item Card -->
-            <div class="type-card lost" [class.active]="selectedReportType === 'lost'" (click)="selectReportType('lost')">
-                <div class="type-card-inner">
-                    <div class="type-card-content">
-                        <div class="type-icon">
-                            <i class="fas fa-search"></i>
-                        </div>
-                        <h3 class="card-title">Lost Something?</h3>
-                        <p class="card-description">
-                            Report your lost item and increase your chances of getting it back with our community help.
-                        </p>
-                        <div class="card-action lost-action">
-                            <span>Report Lost Item</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
-                        <div class="active-badge" *ngIf="selectedReportType === 'lost'">
-                            <i class="fas fa-check-circle"></i>
-                            Currently Selected
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Found Item Card -->
-            <div class="type-card found" [class.active]="selectedReportType === 'found'" (click)="selectReportType('found')">
-                <div class="type-card-inner">
-                    <div class="type-card-content">
-                        <div class="type-icon">
-                            <i class="fas fa-hand-holding-heart"></i>
-                        </div>
-                        <h3 class="card-title">Found Something?</h3>
-                        <p class="card-description">
-                            Help return a found item to its owner. Your good deed could make someone's day.
-                        </p>
-                        <div class="card-action found-action">
-                            <span>Report Found Item</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
-                        <div class="active-badge" *ngIf="selectedReportType === 'found'">
-                            <i class="fas fa-check-circle"></i>
-                            Currently Selected
-                        </div>
-                    </div>
-                </div>
+        <!-- Toggle Buttons -->
+        <div class="flex justify-center mb-12">
+            <div class="inline-flex bg-gray-100 rounded-xl p-1 border border-gray-200">
+                <button 
+                    (click)="selectReportType('lost')"
+                    class="px-8 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-3"
+                    [class]="selectedReportType === 'lost' ? 
+                              'bg-white text-primary shadow-md' : 
+                              'text-gray-600 hover:text-gray-900 hover:bg-gray-50'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Lost Item
+                </button>
+                <button 
+                    (click)="selectReportType('found')"
+                    class="px-8 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-3"
+                    [class]="selectedReportType === 'found' ? 
+                              'bg-white text-secondary shadow-md' : 
+                              'text-gray-600 hover:text-gray-900 hover:bg-gray-50'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                    Found Item
+                </button>
             </div>
         </div>
 
-        <!-- Dynamic Form Container -->
-        <div class="form-container" [class.slide-in]="true">
-            <!-- Lost Item Form -->
-            <div *ngIf="selectedReportType === 'lost'" class="lost-form">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Left: Form -->
-                    <div class="lg:col-span-2">
-                        <div class="form-card">
-                            <!-- Form Header -->
-                            <div class="form-header">
-                                <div class="header-icon lost-icon">
-                                    <i class="fas fa-search"></i>
-                                </div>
-                                <div>
-                                    <h2 class="form-title">Report Lost Item</h2>
-                                    <p class="form-subtitle">Fill in details about your lost item</p>
-                                </div>
-                            </div>
-
-                            <!-- Lost Item Specific Fields -->
-                            <form [formGroup]="lostItemForm" (ngSubmit)="onLostSubmit()" class="space-y-8">
-                                <!-- Item Details -->
-                                <div class="space-y-6">
-                                    <div>
-                                        <label class="form-label">
-                                            Item Title <span class="required">*</span>
-                                        </label>
-                                        <input 
-                                            type="text" 
-                                            formControlName="title"
-                                            placeholder="e.g., MacBook Pro 14-inch Space Gray"
-                                            class="form-input"
-                                        >
-                                        <div *ngIf="lostItemForm.get('title')?.invalid && lostItemForm.get('title')?.touched" 
-                                             class="error-message">
-                                            Item title is required
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label">
-                                            Category <span class="required">*</span>
-                                        </label>
-                                        <div class="category-grid">
-                                            <div *ngFor="let cat of categories" 
-                                                 class="category-option"
-                                                 [class.selected]="lostItemForm.get('category')?.value === cat.value"
-                                                 (click)="lostItemForm.patchValue({ category: cat.value })">
-                                                <div class="option-content">
-                                                    <i class="fas {{cat.icon}}" [ngClass]="{
-                                                        'text-primary': cat.value === 'electronics',
-                                                        'text-accent': cat.value === 'documents',
-                                                        'text-secondary': cat.value === 'accessories',
-                                                        'text-red-500': cat.value === 'personal'
-                                                    }"></i>
-                                                    <span class="option-label">{{cat.label}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label">
-                                            Description <span class="required">*</span>
-                                        </label>
-                                        <textarea 
-                                            formControlName="description"
-                                            placeholder="Describe your lost item in detail..."
-                                            class="form-textarea"
-                                            rows="4"
-                                        ></textarea>
-                                        <div class="hint">
-                                            <i class="fas fa-lightbulb text-primary"></i>
-                                            Be as detailed as possible to help others identify your item
-                                        </div>
-                                        <div *ngIf="lostItemForm.get('description')?.invalid && lostItemForm.get('description')?.touched" 
-                                             class="error-message">
-                                            Description is required
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label class="form-label">
-                                                Date Lost <span class="required">*</span>
-                                            </label>
-                                            <div class="relative">
-                                                <input 
-                                                    type="date" 
-                                                    formControlName="dateLost"
-                                                    class="form-input"
-                                                >
-                                                <i class="fas fa-calendar-alt input-icon"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="form-label">
-                                                Approximate Time Lost
-                                            </label>
-                                            <div class="relative">
-                                                <input 
-                                                    type="time" 
-                                                    formControlName="timeLost"
-                                                    class="form-input"
-                                                >
-                                                <i class="fas fa-clock input-icon"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label">
-                                            Last Known Location <span class="required">*</span>
-                                        </label>
-                                        <input 
-                                            type="text" 
-                                            formControlName="location"
-                                            placeholder="e.g., Main Library, 2nd Floor, Study Area B"
-                                            class="form-input"
-                                        >
-                                        <div *ngIf="lostItemForm.get('location')?.invalid && lostItemForm.get('location')?.touched" 
-                                             class="error-message">
-                                            Location is required
-                                        </div>
-                                    </div>
-
-                                    <!-- Lost Item Specific Questions -->
-                                    <div class="info-card lost-info">
-                                        <h4 class="info-title">
-                                            <i class="fas fa-question-circle"></i>
-                                            Additional Information
-                                        </h4>
-                                        <div class="space-y-4">
-                                            <div>
-                                                <label class="form-label">
-                                                    Reward Offered
-                                                </label>
-                                                <div class="flex items-center space-x-4">
-                                                    <label class="radio-label">
-                                                        <input 
-                                                            type="radio" 
-                                                            formControlName="reward"
-                                                            value="yes"
-                                                            class="radio-input"
-                                                        >
-                                                        <span>Yes</span>
-                                                    </label>
-                                                    <label class="radio-label">
-                                                        <input 
-                                                            type="radio" 
-                                                            formControlName="reward"
-                                                            value="no"
-                                                            class="radio-input"
-                                                        >
-                                                        <span>No</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label class="form-label">
-                                                    Item Value (Approximate)
-                                                </label>
-                                                <select formControlName="value" class="form-input">
-                                                    <option value="">Select value range</option>
-                                                    <option value="low">Under $50</option>
-                                                    <option value="medium">$50 - $200</option>
-                                                    <option value="high">$200 - $500</option>
-                                                    <option value="very-high">Over $500</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Photo Upload -->
-                                    <div>
-                                        <label class="form-label">
-                                            Upload Reference Photos
-                                        </label>
-                                        <input 
-                                            type="file" 
-                                            id="lostFileInput"
-                                            (change)="onFileSelected($event, 'lost')"
-                                            accept="image/*"
-                                            multiple
-                                            class="hidden"
-                                        >
-                                        <div class="photo-upload-area" (click)="triggerFileInput('lost')">
-                                            <div class="upload-content">
-                                                <div class="upload-icon lost-upload">
-                                                    <i class="fas fa-cloud-upload-alt"></i>
-                                                </div>
-                                                <h4 class="upload-title">Drag & Drop or Click to Upload</h4>
-                                                <p class="upload-description">
-                                                    Upload photos of a similar item to help others identify it
-                                                </p>
-                                                <button type="button" class="upload-btn lost-btn">
-                                                    <i class="fas fa-images"></i>
-                                                    Choose Files
-                                                </button>
-                                                <p class="upload-note">
-                                                    Maximum 5 photos • JPG, PNG up to 5MB each
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Form Actions -->
-                                <div class="form-actions">
-                                    <button type="button" (click)="switchToFound()" class="btn-secondary">
-                                        <i class="fas fa-exchange-alt"></i>
-                                        Switch to Found Item
-                                    </button>
-                                    <button type="submit" class="btn-primary lost-btn" [disabled]="lostItemForm.invalid">
-                                        <i class="fas fa-paper-plane"></i>
-                                        Submit Lost Item Report
-                                    </button>
-                                </div>
-                            </form>
+        <!-- Form Container -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500">
+            <!-- Form Header -->
+            <div class="relative overflow-hidden transition-all duration-500"
+                 [class]="selectedReportType === 'lost' ? 
+                           'bg-gradient-to-r from-primary/5 to-primary-light/5' : 
+                           'bg-gradient-to-r from-secondary/5 to-accent/5'">
+                <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-16 -mt-16 transition-all duration-500"
+                     [class]="selectedReportType === 'lost' ? 'bg-primary/5' : 'bg-secondary/5'"></div>
+                <div class="relative z-10 p-8">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-xl shadow-lg flex items-center justify-center text-xl transition-all duration-500"
+                             [class]="selectedReportType === 'lost' ? 
+                                       'bg-gradient-to-br from-primary to-primary-light text-white' : 
+                                       'bg-gradient-to-br from-secondary to-accent text-white'">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path *ngIf="selectedReportType === 'lost'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                <path *ngIf="selectedReportType === 'found'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
                         </div>
-                    </div>
-
-                    <!-- Right: Guidance & Tips -->
-                    <div class="sidebar">
-                        <!-- Tips Card -->
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon lost-icon">
-                                    <i class="fas fa-search"></i>
-                                </div>
-                                <h3 class="stat-title">Tips for Lost Items</h3>
-                            </div>
-                            <ul class="tips-list">
-                                <li class="tip-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Retrace your steps from the last time you remember having the item</span>
-                                </li>
-                                <li class="tip-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Check with nearby lost & found offices immediately</span>
-                                </li>
-                                <li class="tip-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Include serial numbers and unique identifiers in your description</span>
-                                </li>
-                                <li class="tip-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Be specific about time and location details</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Recovery Stats -->
-                        <div class="stat-card">
-                            <h3 class="stat-title">Lost Item Recovery Rate</h3>
-                            <div class="space-y-4">
-                                <div *ngFor="let stat of lostRecoveryStats" class="stat-item">
-                                    <div class="stat-info">
-                                        <span class="stat-category">{{stat.category}}</span>
-                                        <span class="stat-percentage">{{stat.percentage}}%</span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" [style.width.%]="stat.percentage" [style.backgroundColor]="stat.color"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Recently Found -->
-                        <div class="stat-card">
-                            <h3 class="stat-title">
-                                <i class="fas fa-history text-primary"></i>
-                                Recently Found Items
-                            </h3>
-                            <div class="space-y-4">
-                                <div *ngFor="let item of recentlyFoundItems" class="recent-item">
-                                    <div class="item-icon" [ngClass]="{'bg-primary/20': item.status === 'found', 'bg-accent/20': item.status === 'claimed'}">
-                                        <i class="fas {{item.icon}}" [ngClass]="{'text-primary': item.status === 'found', 'text-accent': item.status === 'claimed'}"></i>
-                                    </div>
-                                    <div class="item-info">
-                                        <p class="item-title">{{item.title}}</p>
-                                        <p class="item-time">{{item.time}}</p>
-                                    </div>
-                                    <span class="item-status" [ngClass]="{'bg-green-100 text-green-800': item.status === 'found', 'bg-blue-100 text-blue-800': item.status === 'claimed'}">
-                                        {{item.status === 'found' ? 'Found' : 'Claimed'}}
-                                    </span>
-                                </div>
-                            </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-text-primary transition-all duration-500"
+                                [class]="selectedReportType === 'lost' ? 'text-primary' : 'text-secondary'">
+                                {{selectedReportType === 'lost' ? 'Lost' : 'Found'}} Item Details
+                            </h2>
+                            <p class="text-text-secondary">
+                                {{selectedReportType === 'lost' ? 
+                                  'Please provide accurate information to help identify your item' : 
+                                  'Thank you for helping return this item to its owner'}}
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Found Item Form -->
-            <div *ngIf="selectedReportType === 'found'" class="found-form">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Left: Form -->
-                    <div class="lg:col-span-2">
-                        <div class="form-card">
-                            <!-- Form Header -->
-                            <div class="form-header">
-                                <div class="header-icon found-icon">
-                                    <i class="fas fa-hand-holding-heart"></i>
-                                </div>
-                                <div>
-                                    <h2 class="form-title">Report Found Item</h2>
-                                    <p class="form-subtitle">Help return a found item to its owner</p>
-                                </div>
+            <!-- Lost Item Form -->
+            <form *ngIf="selectedReportType === 'lost'" [formGroup]="lostItemForm" (ngSubmit)="onLostSubmit()" class="p-8 space-y-8">
+                <!-- Basic Information Section -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 pb-2 border-b border-gray-100 flex items-center">
+                        <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Basic Information
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Item Name <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="text" 
+                                    formControlName="title"
+                                    placeholder="e.g., Blue Samsonite Backpack"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-gray-50/50"
+                                >
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                </svg>
                             </div>
-
-                            <!-- Found Item Specific Fields -->
-                            <form [formGroup]="foundItemForm" (ngSubmit)="onFoundSubmit()" class="space-y-8">
-                                <!-- Item Details -->
-                                <div class="space-y-6">
-                                    <div>
-                                        <label class="form-label">
-                                            Item Title <span class="required">*</span>
-                                        </label>
-                                        <input 
-                                            type="text" 
-                                            formControlName="title"
-                                            placeholder="e.g., Black Leather Wallet with Credit Cards"
-                                            class="form-input"
-                                        >
-                                        <div *ngIf="foundItemForm.get('title')?.invalid && foundItemForm.get('title')?.touched" 
-                                             class="error-message">
-                                            Item title is required
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label">
-                                            Category <span class="required">*</span>
-                                        </label>
-                                        <div class="category-grid">
-                                            <div *ngFor="let cat of categories" 
-                                                 class="category-option"
-                                                 [class.selected]="foundItemForm.get('category')?.value === cat.value"
-                                                 (click)="foundItemForm.patchValue({ category: cat.value })">
-                                                <div class="option-content">
-                                                    <i class="fas {{cat.icon}}" [ngClass]="{
-                                                        'text-primary': cat.value === 'electronics',
-                                                        'text-accent': cat.value === 'documents',
-                                                        'text-secondary': cat.value === 'accessories',
-                                                        'text-green-500': cat.value === 'personal'
-                                                    }"></i>
-                                                    <span class="option-label">{{cat.label}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label">
-                                            Description <span class="required">*</span>
-                                        </label>
-                                        <textarea 
-                                            formControlName="description"
-                                            placeholder="Describe the found item in detail..."
-                                            class="form-textarea"
-                                            rows="4"
-                                        ></textarea>
-                                        <div class="hint">
-                                            <i class="fas fa-lightbulb text-green-500"></i>
-                                            Describe any personal information without revealing sensitive details
-                                        </div>
-                                        <div *ngIf="foundItemForm.get('description')?.invalid && foundItemForm.get('description')?.touched" 
-                                             class="error-message">
-                                            Description is required
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label class="form-label">
-                                                Date Found <span class="required">*</span>
-                                            </label>
-                                            <div class="relative">
-                                                <input 
-                                                    type="date" 
-                                                    formControlName="dateFound"
-                                                    class="form-input"
-                                                >
-                                                <i class="fas fa-calendar-alt input-icon"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="form-label">
-                                                Approximate Time Found
-                                            </label>
-                                            <div class="relative">
-                                                <input 
-                                                    type="time" 
-                                                    formControlName="timeFound"
-                                                    class="form-input"
-                                                >
-                                                <i class="fas fa-clock input-icon"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label">
-                                            Found Location <span class="required">*</span>
-                                        </label>
-                                        <input 
-                                            type="text" 
-                                            formControlName="location"
-                                            placeholder="e.g., Student Center, Cafeteria, Table near window"
-                                            class="form-input"
-                                        >
-                                        <div *ngIf="foundItemForm.get('location')?.invalid && foundItemForm.get('location')?.touched" 
-                                             class="error-message">
-                                            Location is required
-                                        </div>
-                                    </div>
-
-                                    <!-- Found Item Specific Questions -->
-                                    <div class="info-card found-info">
-                                        <h4 class="info-title">
-                                            <i class="fas fa-question-circle"></i>
-                                            Found Item Handling
-                                        </h4>
-                                        <div class="space-y-4">
-                                            <div>
-                                                <label class="form-label">
-                                                    Item Condition
-                                                </label>
-                                                <select formControlName="condition" class="form-input">
-                                                    <option value="">Select condition</option>
-                                                    <option value="new">Like New</option>
-                                                    <option value="good">Good</option>
-                                                    <option value="fair">Fair (Some wear)</option>
-                                                    <option value="damaged">Damaged</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label class="form-label">
-                                                    Personal Information Visible
-                                                </label>
-                                                <div class="flex items-center space-x-4">
-                                                    <label class="radio-label">
-                                                        <input 
-                                                            type="radio" 
-                                                            formControlName="personalInfo"
-                                                            value="yes"
-                                                            class="radio-input"
-                                                        >
-                                                        <span>Yes (e.g., name, ID)</span>
-                                                    </label>
-                                                    <label class="radio-label">
-                                                        <input 
-                                                            type="radio" 
-                                                            formControlName="personalInfo"
-                                                            value="no"
-                                                            class="radio-input"
-                                                        >
-                                                        <span>No</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Photo Upload -->
-                                    <div>
-                                        <label class="form-label">
-                                            Upload Photos of Found Item <span class="required">*</span>
-                                        </label>
-                                        <input 
-                                            type="file" 
-                                            id="foundFileInput"
-                                            (change)="onFileSelected($event, 'found')"
-                                            accept="image/*"
-                                            multiple
-                                            class="hidden"
-                                        >
-                                        <div class="photo-upload-area" (click)="triggerFileInput('found')">
-                                            <div class="upload-content">
-                                                <div class="upload-icon found-upload">
-                                                    <i class="fas fa-camera"></i>
-                                                </div>
-                                                <h4 class="upload-title">Upload Clear Photos</h4>
-                                                <p class="upload-description">
-                                                    Take photos from multiple angles to help the owner identify their item
-                                                </p>
-                                                <button type="button" class="upload-btn found-btn">
-                                                    <i class="fas fa-camera"></i>
-                                                    Upload Photos
-                                                </button>
-                                                <p class="upload-note">
-                                                    Maximum 5 photos • JPG, PNG up to 5MB each
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Contact Information -->
-                                    <div>
-                                        <h4 class="section-title">
-                                            <i class="fas fa-user-check text-primary"></i>
-                                            Your Contact Information
-                                        </h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label class="form-label">
-                                                    Your Name <span class="required">*</span>
-                                                </label>
-                                                <input 
-                                                    type="text" 
-                                                    formControlName="name"
-                                                    placeholder="Enter your name"
-                                                    class="form-input"
-                                                >
-                                            </div>
-                                            <div>
-                                                <label class="form-label">
-                                                    Email Address <span class="required">*</span>
-                                                </label>
-                                                <input 
-                                                    type="email" 
-                                                    formControlName="email"
-                                                    placeholder="your.email@example.com"
-                                                    class="form-input"
-                                                >
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Form Actions -->
-                                <div class="form-actions">
-                                    <button type="button" (click)="switchToLost()" class="btn-secondary">
-                                        <i class="fas fa-exchange-alt"></i>
-                                        Switch to Lost Item
-                                    </button>
-                                    <button type="submit" class="btn-primary found-btn" [disabled]="foundItemForm.invalid">
-                                        <i class="fas fa-hand-holding-heart"></i>
-                                        Submit Found Item Report
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Right: Guidance & Tips -->
-                    <div class="sidebar">
-                        <!-- Tips Card -->
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon found-icon">
-                                    <i class="fas fa-hand-holding-heart"></i>
-                                </div>
-                                <h3 class="stat-title">Tips for Found Items</h3>
-                            </div>
-                            <ul class="tips-list">
-                                <li class="tip-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Do not share personal information from the item publicly</span>
-                                </li>
-                                <li class="tip-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Take clear photos from multiple angles</span>
-                                </li>
-                                <li class="tip-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Note the exact location where you found the item</span>
-                                </li>
-                                <li class="tip-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>If it contains IDs or cards, consider turning it in to the appropriate office</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Return Stats -->
-                        <div class="stat-card">
-                            <h3 class="stat-title">Found Item Return Rate</h3>
-                            <div class="space-y-4">
-                                <div *ngFor="let stat of foundReturnStats" class="stat-item">
-                                    <div class="stat-info">
-                                        <span class="stat-category">{{stat.category}}</span>
-                                        <span class="stat-percentage">{{stat.percentage}}%</span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" [style.width.%]="stat.percentage" [style.backgroundColor]="stat.color"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Recently Lost -->
-                        <div class="stat-card">
-                            <h3 class="stat-title">
-                                <i class="fas fa-search text-red-500"></i>
-                                Recently Lost Items
-                            </h3>
-                            <div class="space-y-4">
-                                <div *ngFor="let item of recentlyLostItems" class="recent-item">
-                                    <div class="item-icon bg-red-100">
-                                        <i class="fas {{item.icon}} text-red-500"></i>
-                                    </div>
-                                    <div class="item-info">
-                                        <p class="item-title">{{item.title}}</p>
-                                        <p class="item-time">{{item.time}}</p>
-                                    </div>
-                                    <span class="item-status bg-red-100 text-red-800">
-                                        Lost
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Support Card -->
-                        <div class="stat-card support-card">
-                            <div class="support-header">
-                                <div class="support-icon">
-                                    <i class="fas fa-headset"></i>
-                                </div>
-                                <div>
-                                    <h3 class="support-title">Need Help?</h3>
-                                    <p class="support-subtitle">We're here to assist you</p>
-                                </div>
-                            </div>
-                            <p class="support-text">
-                                Not sure how to handle a found item? Contact our support team for guidance.
+                            <p *ngIf="lostItemForm.get('title')?.invalid && lostItemForm.get('title')?.touched" 
+                               class="text-red-500 text-sm mt-1 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Required
                             </p>
-                            <button class="support-btn">
-                                <i class="fas fa-comments"></i>
-                                Get Help
-                            </button>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Category <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select 
+                                    formControlName="category"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-gray-50/50 appearance-none"
+                                >
+                                    <option value="" disabled selected>Select Category</option>
+                                    <option *ngFor="let cat of categories" [value]="cat.value">{{cat.label}}</option>
+                                </select>
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                                </svg>
+                                <svg class="w-5 h-5 text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Description Section -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 pb-2 border-b border-gray-100 flex items-center">
+                        <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Description
+                    </h3>
+                    <div class="space-y-3">
+                        <label class="block text-sm font-semibold text-text-primary">
+                            Item Description <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <textarea 
+                                formControlName="description"
+                                rows="4"
+                                placeholder="Describe your item in detail. Include brand, color, size, unique features, serial numbers, and any distinguishing marks..."
+                                class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none bg-gray-50/50"
+                            ></textarea>
+                            <div class="absolute bottom-3 right-3 text-xs text-gray-400">
+                                <span id="lostCharCount">0</span>/500
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lost Details Section -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 pb-2 border-b border-gray-100 flex items-center">
+                        <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Lost Details
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Date Lost <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="date" 
+                                    formControlName="dateLost"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-gray-50/50"
+                                >
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Approximate Time
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="time" 
+                                    formControlName="timeLost"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-gray-50/50"
+                                >
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Location <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="text" 
+                                    formControlName="location"
+                                    placeholder="e.g., Library 3rd Floor"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-gray-50/50"
+                                >
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo Upload Section -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 pb-2 border-b border-gray-100 flex items-center">
+                        <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Photos (Optional)
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="relative group">
+                            <input 
+                                type="file" 
+                                id="lostFileInput"
+                                (change)="onFileSelected($event, 'lost')"
+                                accept="image/*"
+                                multiple
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                            >
+                            <div class="border-2 border-dashed border-gray-200 rounded-xl p-10 text-center transition-all duration-300 group-hover:border-primary group-hover:bg-primary/5 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary-light/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="relative z-10">
+                                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <svg class="w-10 h-10 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-lg font-semibold text-text-primary mb-2">Upload Photos</p>
+                                    <p class="text-sm text-text-secondary">Drag & drop or click to upload</p>
+                                    <p class="text-xs text-gray-500 mt-2">Up to 5 photos (JPG, PNG, max 5MB each)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Previews -->
+                        <div *ngIf="lostPhotoPreviews.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                            <div *ngFor="let preview of lostPhotoPreviews; let i = index" 
+                                 class="relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-shadow">
+                                <img [src]="preview" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3">
+                                    <button 
+                                        type="button" 
+                                        (click)="removePhoto('lost', i)"
+                                        class="w-10 h-10 rounded-full bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shadow-lg"
+                                    >
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="pt-8 border-t border-gray-100">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <div class="flex items-center gap-2 text-text-secondary text-sm">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            <span>Your information is secure and will only be shared with verified finders</span>
+                        </div>
+                        <button 
+                            type="submit" 
+                            [disabled]="lostItemForm.invalid"
+                            class="px-8 py-4 bg-gradient-to-r from-primary to-primary-light text-white font-bold rounded-xl hover:from-primary-dark hover:to-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-3 min-w-[200px] justify-center"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                            Submit Lost Report
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Found Item Form -->
+            <form *ngIf="selectedReportType === 'found'" [formGroup]="foundItemForm" (ngSubmit)="onFoundSubmit()" class="p-8 space-y-8">
+                <!-- Basic Information Section -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 pb-2 border-b border-gray-100 flex items-center">
+                        <svg class="w-5 h-5 text-secondary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Basic Information
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Item Name <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="text" 
+                                    formControlName="title"
+                                    placeholder="e.g., Black Wallet, iPhone 13"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all bg-gray-50/50"
+                                >
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                </svg>
+                            </div>
+                            <p *ngIf="foundItemForm.get('title')?.invalid && foundItemForm.get('title')?.touched" 
+                               class="text-red-500 text-sm mt-1 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Required
+                            </p>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Category <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select 
+                                    formControlName="category"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all bg-gray-50/50 appearance-none"
+                                >
+                                    <option value="" disabled selected>Select Category</option>
+                                    <option *ngFor="let cat of categories" [value]="cat.value">{{cat.label}}</option>
+                                </select>
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                                </svg>
+                                <svg class="w-5 h-5 text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description Section -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 pb-2 border-b border-gray-100 flex items-center">
+                        <svg class="w-5 h-5 text-secondary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Description
+                    </h3>
+                    <div class="space-y-3">
+                        <label class="block text-sm font-semibold text-text-primary">
+                            Item Description <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <textarea 
+                                formControlName="description"
+                                rows="4"
+                                placeholder="Describe the found item in detail. Include brand, color, size, unique features, and any identifying marks..."
+                                class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all resize-none bg-gray-50/50"
+                            ></textarea>
+                            <div class="absolute bottom-3 right-3 text-xs text-gray-400">
+                                <span id="foundCharCount">0</span>/500
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Found Details Section -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 pb-2 border-b border-gray-100 flex items-center">
+                        <svg class="w-5 h-5 text-secondary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Found Details
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Date Found <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="date" 
+                                    formControlName="dateFound"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all bg-gray-50/50"
+                                >
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Approximate Time
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="time" 
+                                    formControlName="timeFound"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all bg-gray-50/50"
+                                >
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Location Found <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="text" 
+                                    formControlName="location"
+                                    placeholder="e.g., Library 3rd Floor"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all bg-gray-50/50"
+                                >
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo Upload Section -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 pb-2 border-b border-gray-100 flex items-center">
+                        <svg class="w-5 h-5 text-secondary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Photos (Optional)
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="relative group">
+                            <input 
+                                type="file" 
+                                id="foundFileInput"
+                                (change)="onFileSelected($event, 'found')"
+                                accept="image/*"
+                                multiple
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                            >
+                            <div class="border-2 border-dashed border-gray-200 rounded-xl p-10 text-center transition-all duration-300 group-hover:border-secondary group-hover:bg-secondary/5 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="relative z-10">
+                                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                        <svg class="w-10 h-10 text-gray-400 group-hover:text-secondary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-lg font-semibold text-text-primary mb-2">Upload Photos</p>
+                                    <p class="text-sm text-text-secondary">Drag & drop or click to upload</p>
+                                    <p class="text-xs text-gray-500 mt-2">Up to 5 photos (JPG, PNG, max 5MB each)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Previews -->
+                        <div *ngIf="foundPhotoPreviews.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                            <div *ngFor="let preview of foundPhotoPreviews; let i = index" 
+                                 class="relative group aspect-square rounded-lg overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-shadow">
+                                <img [src]="preview" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3">
+                                    <button 
+                                        type="button" 
+                                        (click)="removePhoto('found', i)"
+                                        class="w-10 h-10 rounded-full bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shadow-lg"
+                                    >
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 pb-2 border-b border-gray-100 flex items-center">
+                        <svg class="w-5 h-5 text-secondary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Your Contact Information
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Your Name <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="text" 
+                                    formControlName="name"
+                                    placeholder="John Doe"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all bg-gray-50/50"
+                                >
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <label class="block text-sm font-semibold text-text-primary">
+                                Your Email <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input 
+                                    type="email" 
+                                    formControlName="email"
+                                    placeholder="you@example.com"
+                                    class="w-full px-4 py-3 pl-10 rounded-lg border border-gray-200 focus:border-secondary focus:ring-2 focus:ring-secondary/20 outline-none transition-all bg-gray-50/50"
+                                >
+                                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="pt-8 border-t border-gray-100">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <div class="flex items-center gap-2 text-text-secondary text-sm">
+                            <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            <span>Your contact information will only be shared with the item owner</span>
+                        </div>
+                        <button 
+                            type="submit" 
+                            [disabled]="foundItemForm.invalid"
+                            class="px-8 py-4 bg-gradient-to-r from-secondary to-accent text-white font-bold rounded-xl hover:from-secondary-dark hover:to-accent disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-3 min-w-[200px] justify-center"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Submit Found Report
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Help Text -->
+        <div class="mt-12 text-center">
+            <div class="inline-flex items-center gap-6 text-text-secondary text-sm bg-gray-50/50 rounded-full px-6 py-3">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 transition-all duration-500"
+                         [class.text-primary]="selectedReportType === 'lost'"
+                         [class.text-secondary]="selectedReportType === 'found'" 
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Need help? Contact support</span>
+                </div>
+                <div class="w-1 h-1 rounded-full bg-gray-300"></div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 transition-all duration-500"
+                         [class.text-primary]="selectedReportType === 'lost'"
+                         [class.text-secondary]="selectedReportType === 'found'"
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Reports are active for 30 days</span>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<app-footer></app-footer>

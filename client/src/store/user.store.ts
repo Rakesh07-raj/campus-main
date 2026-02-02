@@ -1,14 +1,15 @@
 import { signal } from '@angular/core';
 export const userStore = signal({
+  id: '',
   name: '',
   email: '',
-  password: '',
+  role: '',
 });
 
-export const addUser = ({ name, email, password }: any) => {
-  userStore.set({ name, email, password });
+export const addUser = ({ id, name, email, role }: any) => {
+  userStore.set({ id, name, email, role });
 };
 
 export const removeUser = () => {
-  userStore.set({ name: '', email: '', password: '' });
+  userStore.set({ id: '', name: '', email: '', role: '' });
 };

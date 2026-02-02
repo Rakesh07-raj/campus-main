@@ -1,11 +1,16 @@
 const express = require('express');
-const upload = require('../middlewares/upload');
-const { createLostItem } = require('../controllers/lost-controller');
-const { createFoundItem } = require('../controllers/found-controller');
-
 const router = express.Router();
 
-router.post('/lost', upload.array('photos', 5), createLostItem);
-router.post('/found', upload.array('photos', 5), createFoundItem);
+// Import route modules
+const userRouter = require('./user-route');
+const lostRouter = require('./lost-routes');
+const foundRouter = require('./found-routes');
+const itemRouter = require('./item-routes');
+
+// Mount routes
+router.use('/user', userRouter);
+router.use('/lost', lostRouter);
+router.use('/found', foundRouter);
+router.use('/items', itemRouter); // Keep for backward compatibility
 
 module.exports = router;

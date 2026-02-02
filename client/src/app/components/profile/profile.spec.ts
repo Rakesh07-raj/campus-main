@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Retrive } from './retrive';
+import { Profile } from './profile';
 
-describe('Retrive', () => {
-  let component: Retrive;
-  let fixture: ComponentFixture<Retrive>;
+describe('Profile', () => {
+  let component: Profile;
+  let fixture: ComponentFixture<Profile>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Retrive]
+      imports: [Profile]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Retrive);
+    fixture = TestBed.createComponent(Profile);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

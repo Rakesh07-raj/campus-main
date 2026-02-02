@@ -1,11 +1,11 @@
 const express = require('express');
 const upload = require('../middlewares/upload');
-const { createLostItem } = require('../controllers/lost.controller');
-const { createFoundItem } = require('../controllers/found.controller');
+const { createItem, getItems, claimItem } = require('../controllers/item-controller');
 
 const router = express.Router();
 
-router.post('/lost', upload.array('photos', 5), createLostItem);
-router.post('/found', upload.array('photos', 5), createFoundItem);
+router.post('/report', upload.single('photo'), createItem);
+router.get('/', getItems);
+router.put('/:id/claim', claimItem);
 
 module.exports = router;

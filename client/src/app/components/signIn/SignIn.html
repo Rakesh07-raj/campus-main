@@ -39,7 +39,12 @@
     </div>
 
     <!-- RIGHT PANEL -->
-    <div class="w-2/5 p-8 flex flex-col justify-center">
+    <div class="w-2/5 p-8 flex flex-col justify-center relative">
+      <!-- Back Button -->
+      <a routerLink="/" class="absolute top-8 left-8 text-text-secondary hover:text-primary transition-colors flex items-center gap-1 text-sm font-medium cursor-pointer">
+        <lucide-angular name="arrow-left" size="16"></lucide-angular>
+        Back to Home
+      </a>
       <!-- Logo -->
       <div class="flex items-center gap-2 mb-6">
         <div class="bg-primary p-2 rounded-lg">
